@@ -2,9 +2,7 @@ package org.example.utilities;
 
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.response.Response;
-import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
-import io.restassured.specification.ResponseSpecification;
 
 public class ApiTestContext {
 

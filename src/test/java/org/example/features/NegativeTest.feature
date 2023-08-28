@@ -1,10 +1,12 @@
 @NegativeTests
 Feature: Test the negative scenarios of OMDb API
 
+  Background:
+    Given Base url is "http://www.omdbapi.com/"
+
   @TC_001
   Scenario: Execute the api with an invalid key
-    Given Base url is "http://www.omdbapi.com/"
-    And Add query parameter key and value "apikey" "invalidKey"
+    Given Add query parameter key and value "apikey" "invalidKey"
     And Add query parameter key and value "t" "Dark"
     When Execute "" resource with "get" method
     Then Assert json response using json path
@@ -14,8 +16,7 @@ Feature: Test the negative scenarios of OMDb API
 
   @TC_004
   Scenario: Execute the api with an invalid title
-    Given Base url is "http://www.omdbapi.com/"
-    And Add query parameter key and value "apikey" "<apikey>"
+    Given Add query parameter key and value "apikey" "<apikey>"
     And Add query parameter key and value "t" "InvalidTitle"
     When Execute "" resource with "get" method
     Then Assert json response using json path
@@ -25,8 +26,7 @@ Feature: Test the negative scenarios of OMDb API
 
   @TC_005
   Scenario: Execute the api with an invalid id
-    Given Base url is "http://www.omdbapi.com/"
-    And Add query parameter key and value "apikey" "<apikey>"
+    Given Add query parameter key and value "apikey" "<apikey>"
     And Add query parameter key and value "i" "InvalidId101"
     When Execute "" resource with "get" method
     Then Assert json response using json path
@@ -36,8 +36,7 @@ Feature: Test the negative scenarios of OMDb API
 
   @TC_006
   Scenario Outline: Execute the api with an invalid id format
-    Given Base url is "http://www.omdbapi.com/"
-    And Add query parameter key and value "apikey" "<apikey>"
+    Given Add query parameter key and value "apikey" "<apikey>"
     And Add query parameter key and value "i" "<InvalidIMDbId>"
     When Execute "" resource with "get" method
     Then Assert json response using json path
@@ -51,8 +50,7 @@ Feature: Test the negative scenarios of OMDb API
 
   @TC_003
   Scenario: Execute the api without api key
-    Given Base url is "http://www.omdbapi.com/"
-    And Add query parameter key and value "t" "Dark"
+    Given Add query parameter key and value "t" "Dark"
     When Execute "" resource with "get" method
     Then Assert json response using json path
       | Response | False                |
@@ -61,8 +59,7 @@ Feature: Test the negative scenarios of OMDb API
 
   @TC_010
   Scenario: Execute api with valid movie title and and an invalid id
-    Given Base url is "http://www.omdbapi.com/"
-    And Add query parameter key and value "apikey" "<apikey>"
+    Given Add query parameter key and value "apikey" "<apikey>"
     And Add query parameter key and value "t" "Rocketry: The Nambi Effect"
     And Add query parameter key and value "i" "tt92635"
     When Execute "" resource with "get" method
@@ -73,8 +70,7 @@ Feature: Test the negative scenarios of OMDb API
 
   @TC_011
   Scenario: Execute api with invalid movie title and and a valid id
-    Given Base url is "http://www.omdbapi.com/"
-    And Add query parameter key and value "apikey" "<apikey>"
+    Given Add query parameter key and value "apikey" "<apikey>"
     And Add query parameter key and value "t" "invalidTitle"
     And Add query parameter key and value "i" "tt9263550"
     When Execute "" resource with "get" method
@@ -85,8 +81,7 @@ Feature: Test the negative scenarios of OMDb API
 
   @TC_012
   Scenario: Execute api with valid movie title and and a valid id but from different set
-    Given Base url is "http://www.omdbapi.com/"
-    And Add query parameter key and value "apikey" "<apikey>"
+    Given Add query parameter key and value "apikey" "<apikey>"
     And Add query parameter key and value "i" "tt9263550"
     And Add query parameter key and value "t" "Dark"
     When Execute "" resource with "get" method
@@ -100,8 +95,7 @@ Feature: Test the negative scenarios of OMDb API
 
   @TC_016
   Scenario: Execute api with valid movie title and and type series
-    Given Base url is "http://www.omdbapi.com/"
-    And Add query parameter key and value "apikey" "<apikey>"
+    Given Add query parameter key and value "apikey" "<apikey>"
     And Add query parameter key and value "t" "A Beautiful mind"
     And Add query parameter key and value "type" "series"
     When Execute "" resource with "get" method
@@ -112,8 +106,7 @@ Feature: Test the negative scenarios of OMDb API
 
   @TC_020
   Scenario: Execute api with valid movie title and and type series
-    Given Base url is "http://www.omdbapi.com/"
-    And Add query parameter key and value "apikey" "<apikey>"
+    Given Add query parameter key and value "apikey" "<apikey>"
     And Add query parameter key and value "t" "13 reason why"
     And Add query parameter key and value "type" "movie"
     When Execute "" resource with "get" method
@@ -124,8 +117,7 @@ Feature: Test the negative scenarios of OMDb API
 
   @TC_022
   Scenario: Execute api with valid movie id and and type series
-    Given Base url is "http://www.omdbapi.com/"
-    And Add query parameter key and value "apikey" "<apikey>"
+    Given Add query parameter key and value "apikey" "<apikey>"
     And Add query parameter key and value "i" "tt9263550"
     And Add query parameter key and value "type" "movie"
     When Execute "" resource with "get" method
@@ -140,8 +132,7 @@ Feature: Test the negative scenarios of OMDb API
 
   @TC_023
   Scenario: Execute api with valid series id and and type movie
-    Given Base url is "http://www.omdbapi.com/"
-    And Add query parameter key and value "apikey" "<apikey>"
+    Given Add query parameter key and value "apikey" "<apikey>"
     And Add query parameter key and value "i" "tt5753856"
     And Add query parameter key and value "type" "movie"
     When Execute "" resource with "get" method
@@ -155,8 +146,7 @@ Feature: Test the negative scenarios of OMDb API
 
   @TC_027
   Scenario: Execute api with valid movie id and and wrong movie year
-    Given Base url is "http://www.omdbapi.com/"
-    And Add query parameter key and value "apikey" "<apikey>"
+    Given Add query parameter key and value "apikey" "<apikey>"
     And Add query parameter key and value "i" "tt9263550"
     And Add query parameter key and value "y" "1000"
     When Execute "" resource with "get" method
@@ -171,8 +161,7 @@ Feature: Test the negative scenarios of OMDb API
 
   @TC_028
   Scenario: Execute api with valid movie title and and movie year
-    Given Base url is "http://www.omdbapi.com/"
-    And Add query parameter key and value "apikey" "<apikey>"
+    Given Add query parameter key and value "apikey" "<apikey>"
     And Add query parameter key and value "t" "Rocketry: The Nambi Effect"
     And Add query parameter key and value "y" "2000"
     When Execute "" resource with "get" method
@@ -183,8 +172,7 @@ Feature: Test the negative scenarios of OMDb API
 
   @TC_038
   Scenario Outline: Execute api with valid movie title and invalid movie type
-    Given Base url is "http://www.omdbapi.com/"
-    And Add query parameter key and value "apikey" "<apikey>"
+    Given Add query parameter key and value "apikey" "<apikey>"
     And Add query parameter key and value "t" "Rocketry: The Nambi Effect"
     And Add query parameter key and value "type" "<invalidType>"
     When Execute "" resource with "get" method
@@ -199,8 +187,7 @@ Feature: Test the negative scenarios of OMDb API
 
   @TC_039
   Scenario Outline: Execute api with valid movie title and invalid movie plot
-    Given Base url is "http://www.omdbapi.com/"
-    And Add query parameter key and value "apikey" "<apikey>"
+    Given Add query parameter key and value "apikey" "<apikey>"
     And Add query parameter key and value "t" "Rocketry: The Nambi Effect"
     And Add query parameter key and value "plot" "<invalidType>"
     When Execute "" resource with "get" method
@@ -220,8 +207,7 @@ Feature: Test the negative scenarios of OMDb API
 
   @TC_040
   Scenario Outline: Execute api with valid movie title and invalid movie plot
-    Given Base url is "http://www.omdbapi.com/"
-    And Add query parameter key and value "apikey" "<apikey>"
+    Given Add query parameter key and value "apikey" "<apikey>"
     And Add query parameter key and value "t" "Rocketry: The Nambi Effect"
     And Add query parameter key and value "r" "<invalidType>"
     When Execute "" resource with "get" method
@@ -240,8 +226,7 @@ Feature: Test the negative scenarios of OMDb API
 
   @TC_042
   Scenario: Execute api with a part movie title which is not present
-    Given Base url is "http://www.omdbapi.com/"
-    And Add query parameter key and value "apikey" "<apikey>"
+    Given Add query parameter key and value "apikey" "<apikey>"
     And Add query parameter key and value "s" "Its not a movie"
     When Execute "" resource with "get" method
     Then Assert json response using json path
@@ -252,8 +237,7 @@ Feature: Test the negative scenarios of OMDb API
 
   @TC_046
   Scenario: Execute api to search a series by title where type is movie
-    Given Base url is "http://www.omdbapi.com/"
-    And Add query parameter key and value "apikey" "<apikey>"
+    Given Add query parameter key and value "apikey" "<apikey>"
     And Add query parameter key and value "s" "Night Goblin"
     And Add query parameter key and value "type" "movie"
     When Execute "" resource with "get" method
@@ -264,8 +248,7 @@ Feature: Test the negative scenarios of OMDb API
 
   @TC_047
   Scenario: Execute api to search a series by title where type is episode
-    Given Base url is "http://www.omdbapi.com/"
-    And Add query parameter key and value "apikey" "<apikey>"
+    Given Add query parameter key and value "apikey" "<apikey>"
     And Add query parameter key and value "s" "Night Goblin"
     And Add query parameter key and value "type" "episode"
     When Execute "" resource with "get" method
@@ -276,8 +259,7 @@ Feature: Test the negative scenarios of OMDb API
 
   @TC_048
   Scenario: Execute api to search a movie by title where type is episode
-    Given Base url is "http://www.omdbapi.com/"
-    And Add query parameter key and value "apikey" "<apikey>"
+    Given Add query parameter key and value "apikey" "<apikey>"
     And Add query parameter key and value "s" "Dark"
     And Add query parameter key and value "type" "episode"
     When Execute "" resource with "get" method
@@ -288,8 +270,7 @@ Feature: Test the negative scenarios of OMDb API
 
   @TC_049
   Scenario: Execute api to search a series by title where type is invalid
-    Given Base url is "http://www.omdbapi.com/"
-    And Add query parameter key and value "apikey" "<apikey>"
+    Given Add query parameter key and value "apikey" "<apikey>"
     And Add query parameter key and value "s" "Dark"
     And Add query parameter key and value "type" "InvalidType"
     When Execute "" resource with "get" method
@@ -300,8 +281,7 @@ Feature: Test the negative scenarios of OMDb API
 
   @TC_051
   Scenario: Execute api to search a series by title and wrong year
-    Given Base url is "http://www.omdbapi.com/"
-    And Add query parameter key and value "apikey" "<apikey>"
+    Given Add query parameter key and value "apikey" "<apikey>"
     And Add query parameter key and value "s" "Zero Dark Thirty"
     And Add query parameter key and value "y" "2022"
     When Execute "" resource with "get" method

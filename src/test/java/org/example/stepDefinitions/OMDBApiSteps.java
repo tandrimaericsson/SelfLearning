@@ -9,7 +9,6 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.path.xml.XmlPath;
 import io.restassured.response.Response;
-import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
 import org.example.utilities.ApiTestContext;
 import org.example.utilities.PropertiesFileReader;
@@ -23,7 +22,7 @@ import static io.restassured.RestAssured.given;
 
 public class OMDBApiSteps {
 
-    private final ApiTestContext apiTestContext;
+    private ApiTestContext apiTestContext;
 
     public OMDBApiSteps(ApiTestContext apiTestContext) {
         this.apiTestContext = apiTestContext;
@@ -43,7 +42,6 @@ public class OMDBApiSteps {
             if (properties.containsKey(value.replace(">", "").replace("<", "")))
                 value = properties.getProperty(value.replace(">", "").replace("<", ""));
         }
-
         apiTestContext.setRequestSpecification(apiTestContext.getRequestSpecification().queryParam(key, value));
     }
 
@@ -53,27 +51,16 @@ public class OMDBApiSteps {
         Response response = null;
         try {
             switch (httpMethod) {
-                case "get":
-                    response = requestSpecification.when().get(resource).then().log().all().extract().response();
-                    break;
-                case "post":
-                    response = requestSpecification.when().post(resource).then().extract().response();
-                    break;
-                case "put":
-                    response = requestSpecification.when().put(resource).then().extract().response();
-                    break;
-                case "delete":
-                    response = requestSpecification.when().delete(resource).then().extract().response();
-                    break;
-                case "patch":
-                    response = requestSpecification.when().patch(resource).then().extract().response();
-                    break;
-                default:
-                    System.out.println("Invalid http method");
+                case "get" ->
+                        response = requestSpecification.when().get(resource).then().log().all().extract().response();
+                case "post" -> response = requestSpecification.when().post(resource).then().extract().response();
+                case "put" -> response = requestSpecification.when().put(resource).then().extract().response();
+                case "delete" -> response = requestSpecification.when().delete(resource).then().extract().response();
+                case "patch" -> response = requestSpecification.when().patch(resource).then().extract().response();
+                default -> System.out.println("Invalid http method");
             }
         } catch (NullPointerException e) {
             System.out.println("Response is null. Message : ".concat(e.toString()));
-            response = null;
         }
         apiTestContext.setResponse(response);
     }
@@ -83,11 +70,8 @@ public class OMDBApiSteps {
         Assert.assertNotNull(apiTestContext.getResponse());
         Map<String, String> expectedValues = dataTable.asMap();
         SoftAssert softAssert = new SoftAssert();
-        expectedValues.entrySet().forEach(entry -> {
-            softAssert.assertEquals(apiTestContext.getResponse().jsonPath().getString(entry.getKey()), entry.getValue());
-        });
+        expectedValues.forEach((key, value) -> softAssert.assertEquals(apiTestContext.getResponse().jsonPath().getString(key), value));
         softAssert.assertAll();
-
     }
 
     @And("Assert status code is {int}")
@@ -101,9 +85,7 @@ public class OMDBApiSteps {
         Map<String, String> expectedValues = dataTable.asMap();
         XmlPath xmlPath = apiTestContext.getResponse().xmlPath();
         SoftAssert softAssert = new SoftAssert();
-        expectedValues.entrySet().forEach(entry -> {
-            softAssert.assertEquals(xmlPath.getString(entry.getKey()), entry.getValue());
-        });
+        expectedValues.forEach((key, value) -> softAssert.assertEquals(xmlPath.getString(key), value));
         softAssert.assertAll();
     }
 

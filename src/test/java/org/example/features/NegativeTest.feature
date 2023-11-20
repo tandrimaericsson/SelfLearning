@@ -1,3 +1,4 @@
+@ApiScenarios
 @NegativeTests
 Feature: Test the negative scenarios of OMDb API
 

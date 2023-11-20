@@ -1,3 +1,4 @@
+@ApiScenarios
 @HappyPathTests
 Feature: Test the positive scenarios of OMDb API
 

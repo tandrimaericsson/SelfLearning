@@ -2,31 +2,25 @@ package org.example.stepDefinitions;
 
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.After;
+import io.cucumber.java.AfterStep;
 import io.cucumber.java.Before;
+import io.cucumber.java.Scenario;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import io.cucumber.datatable.DataTable;
-import io.cucumber.java.it.Ma;
 import org.example.utilities.ManageWebDriver;
-import org.example.utilities.UiTestContext;
+import org.example.utilities.TestContext;
 
 import java.util.*;
 
-public class TestSteps {
-
-    private UiTestContext uiTestContext;
+public class BaseSteps {
     private ManageWebDriver manageWebDriver;
+    private TestContext testContext;
 
-    public TestSteps(UiTestContext uiTestContext){
-        this.uiTestContext=uiTestContext;
-        manageWebDriver=uiTestContext.getManageWebDriver();
-    }
-
-    @Before(order=1)
-    public void initializeDriver(){
-        manageWebDriver=new ManageWebDriver();
-        manageWebDriver.initializeDriver();
+    public BaseSteps(TestContext testContext) {
+        this.testContext = testContext;
+        manageWebDriver = testContext.getManageWebDriver();
     }
 
     @Given("the user is on the registration page")
@@ -34,7 +28,7 @@ public class TestSteps {
         System.out.println("Navigate to the registration page");
     }
 
-    @When("the user enters the following details and submits:")
+    @When("the user enters the following details and submits")
     public void theUserEntersTheFollowingDetails(DataTable dataTable) {
         List<Map<String, String>> dataList = dataTable.asMaps(String.class, String.class);
 
@@ -58,6 +52,29 @@ public class TestSteps {
         System.out.println("Verify that the registration was successful");
     }
 
+    //basic browser steps
+    @Before(order = 1)
+    public void initializeDriver() {
+        manageWebDriver = new ManageWebDriver();
+        manageWebDriver.initializeDriver();
+        testContext.setManageWebDriver(manageWebDriver);
+    }
+
+    @AfterStep
+    public void addScreenshot(Scenario scenario) {
+        try {
+            scenario.attach(manageWebDriver.takeScreenshot(), "image/png", "Screenshot_" + scenario.getId());
+            //System.out.println(scenario.getLine());
+        } catch (Exception e) {
+            System.out.println("Not able to take screenshot for line "+scenario.getLine());
+        }
+    }
+
+    @After
+    public void quitBrowser() {
+        manageWebDriver.quit();
+    }
+
     @Given("Open {string} website")
     public void openWebsite(String url) {
         manageWebDriver.openUrl(url);
@@ -68,8 +85,8 @@ public class TestSteps {
         System.out.println(manageWebDriver.getDriver().getTitle());
     }
 
-    @After
-    public void quitBrowser(){
-        manageWebDriver.quit();
+    @And("Wait for {string} to come as page title")
+    public void waitForToComeAsPageTitle(String expectedTitle) {
+        manageWebDriver.waitForPageTitleToLoad(expectedTitle);
     }
 }

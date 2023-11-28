@@ -10,8 +10,8 @@ import io.restassured.http.ContentType;
 import io.restassured.path.xml.XmlPath;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.example.utilities.ApiTestContext;
 import org.example.utilities.PropertiesFileReader;
+import org.example.utilities.TestContext;
 import org.junit.Assert;
 import org.testng.asserts.SoftAssert;
 
@@ -22,17 +22,17 @@ import static io.restassured.RestAssured.given;
 
 public class OMDBApiSteps {
 
-    private ApiTestContext apiTestContext;
+    private final TestContext testContext;
 
-    public OMDBApiSteps(ApiTestContext apiTestContext) {
-        this.apiTestContext = apiTestContext;
+    public OMDBApiSteps(TestContext testContext) {
+        this.testContext = testContext;
     }
 
     @Given("Base url is {string}")
     public void baseUrlIs(String baseUrl) {
         RestAssured.baseURI = baseUrl;
         RequestSpecification requestSpecification = given().contentType(ContentType.JSON);
-        apiTestContext.setRequestSpecification(requestSpecification);
+        testContext.setRequestSpecification(requestSpecification);
     }
 
     @And("Add query parameter key and value {string} {string}")
@@ -42,12 +42,12 @@ public class OMDBApiSteps {
             if (properties.containsKey(value.replace(">", "").replace("<", "")))
                 value = properties.getProperty(value.replace(">", "").replace("<", ""));
         }
-        apiTestContext.setRequestSpecification(apiTestContext.getRequestSpecification().queryParam(key, value));
+        testContext.setRequestSpecification(testContext.getRequestSpecification().queryParam(key, value));
     }
 
     @When("Execute {string} resource with {string} method")
     public void executeResourceWithMethod(String resource, String httpMethod) {
-        RequestSpecification requestSpecification = apiTestContext.getRequestSpecification();
+        RequestSpecification requestSpecification = testContext.getRequestSpecification();
         Response response = null;
         try {
             switch (httpMethod) {
@@ -62,28 +62,28 @@ public class OMDBApiSteps {
         } catch (NullPointerException e) {
             System.out.println("Response is null. Message : ".concat(e.toString()));
         }
-        apiTestContext.setResponse(response);
+        testContext.setResponse(response);
     }
 
     @Then("Assert json response using json path")
     public void assertJsonResponseUsingJsonPath(DataTable dataTable) {
-        Assert.assertNotNull(apiTestContext.getResponse());
+        Assert.assertNotNull(testContext.getResponse());
         Map<String, String> expectedValues = dataTable.asMap();
         SoftAssert softAssert = new SoftAssert();
-        expectedValues.forEach((key, value) -> softAssert.assertEquals(apiTestContext.getResponse().jsonPath().getString(key), value));
+        expectedValues.forEach((key, value) -> softAssert.assertEquals(testContext.getResponse().jsonPath().getString(key), value));
         softAssert.assertAll();
     }
 
     @And("Assert status code is {int}")
     public void assertStatusCodeIs(int statusCode) {
-        Assert.assertNotNull(apiTestContext.getResponse());
-        Assert.assertEquals(apiTestContext.getResponse().getStatusCode(), statusCode);
+        Assert.assertNotNull(testContext.getResponse());
+        Assert.assertEquals(testContext.getResponse().getStatusCode(), statusCode);
     }
 
     @Then("Assert xml response attribute using xpath")
     public void assertXmlResponseAttributeUsingXpath(DataTable dataTable) {
         Map<String, String> expectedValues = dataTable.asMap();
-        XmlPath xmlPath = apiTestContext.getResponse().xmlPath();
+        XmlPath xmlPath = testContext.getResponse().xmlPath();
         SoftAssert softAssert = new SoftAssert();
         expectedValues.forEach((key, value) -> softAssert.assertEquals(xmlPath.getString(key), value));
         softAssert.assertAll();
@@ -92,13 +92,13 @@ public class OMDBApiSteps {
     @And("Assert all the movie {string} in response contains {string}")
     public void assertAllTheMovieInResponseContains(String attribute, String searchValue) {
         SoftAssert softAssert = new SoftAssert();
-        apiTestContext.getResponse().jsonPath().getList("Search.".concat(attribute)).forEach(title -> softAssert.assertTrue(title.toString().contains(searchValue)));
+        testContext.getResponse().jsonPath().getList("Search.".concat(attribute)).forEach(title -> softAssert.assertTrue(title.toString().contains(searchValue)));
         softAssert.assertAll();
     }
 
     @And("Assert all the movie {string} in xml response contains {string}")
     public void assertAllTheMovieInXmlResponseContains(String xpath, String searchValue) {
-        XmlPath xmlPath = apiTestContext.getResponse().xmlPath();
+        XmlPath xmlPath = testContext.getResponse().xmlPath();
         SoftAssert softAssert = new SoftAssert();
         softAssert.assertTrue(xmlPath.getList(xpath).contains(searchValue));
         softAssert.assertAll();

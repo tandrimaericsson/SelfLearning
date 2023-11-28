@@ -9,11 +9,11 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
         features = {"src/test/java/org/example/features"},
         glue = {"org.example.stepDefinitions"},
-        tags = "@ApiScenarios or @UiScenarios",
+        tags = "@test",
         plugin = {"html:target/cucumber-reports.html",
                 "com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:"}
-        ,snippets = CucumberOptions.SnippetType.UNDERSCORE
+        , snippets = io.cucumber.junit.CucumberOptions.SnippetType.UNDERSCORE
 )
-public class RunAllTest {
+public class RunGreenKartTest {
 
 }

@@ -4,4 +4,4 @@
     * use **mvn clean test -Pqa**
 * HTML report will be generated in '**/target**' folder with name **cucumber-reports.html**.
 * Cucumber extent report will be generated in the '**/test-output/SparkReport<_current-date-time_>**' folder.
-* If **apiKey** expired update it in **/src/test/resources/data.properties**.
+* If **apiKey** expired update it in **/src/test/resources/data.properties**.# GitProjects
